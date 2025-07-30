@@ -76,16 +76,16 @@ let waveNumber = 1;
 
 function createEnemyWave() {
   enemies = [];
-  const count = 5 + waveNumber * 2;
+  const count = 6 + waveNumber * 0;
   for (let i = 0; i < count; i++) {
     enemies.push({
-      x: Math.random() * (canvas.width - 40),  // random x within canvas minus enemy width
-      y: -30 - Math.random() * 100,             // start above screen
+      x: Math.random() * (canvas.width - 40),
+      y: -30 - Math.random() * 100,
       width: 40,
-      height: 0, // will calculate dynamically
+      height: 0,
       alive: true,
-      speedX: (Math.random() - 0.5) * 0.5,      // small horizontal sway
-      speedY: 1 + waveNumber * 0.3              // speed increases with wave
+      speedX: (Math.random() - 0.5) * 0.5,
+      speedY: 1 + waveNumber * 0.02  // slower vertical speed growth
     });
   }
   waveNumber++;
@@ -126,7 +126,7 @@ let boss = {
   x: canvas.width / 2 - 50,
   y: 10,
   width: 100,
-  height: 0,  // will calculate dynamically
+  height: 0,
   speedX: 3,
   visible: false,
   health: 5
@@ -164,7 +164,6 @@ function updateBoss() {
 function drawEnemy(enemy) {
   if (enemyImage.complete) {
     if (enemy.height === 0) {
-      // calculate height based on aspect ratio
       const scale = enemy.width / enemyImage.naturalWidth;
       enemy.height = enemyImage.naturalHeight * scale;
     }
@@ -214,7 +213,7 @@ function drawBoss() {
       ctx.fillRect(boss.x, boss.y, boss.width, boss.height || 60);
     }
     // Health bar
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = 'yellow';
     ctx.fillRect(boss.x, boss.y - 10, boss.width, 5);
     ctx.fillStyle = 'green';
     ctx.fillRect(boss.x, boss.y - 10, boss.width * (boss.health / 5), 5);
@@ -304,6 +303,34 @@ function startBackgroundMusic() {
 }
 document.addEventListener('keydown', startBackgroundMusic, { once: true });
 document.addEventListener('click', startBackgroundMusic, { once: true });
+
+// Mobile buttons state
+player.movingLeft = false;
+player.movingRight = false;
+
+// Touch event listeners for mobile controls
+document.getElementById('left-button').addEventListener('touchstart', (e) => {
+  e.preventDefault(); // prevent scrolling
+  player.movingLeft = true;
+});
+document.getElementById('left-button').addEventListener('touchend', (e) => {
+  e.preventDefault();
+  player.movingLeft = false;
+});
+
+document.getElementById('right-button').addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  player.movingRight = true;
+});
+document.getElementById('right-button').addEventListener('touchend', (e) => {
+  e.preventDefault();
+  player.movingRight = false;
+});
+
+document.getElementById('shoot-button').addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  shootBullet();
+});
 
 
 
